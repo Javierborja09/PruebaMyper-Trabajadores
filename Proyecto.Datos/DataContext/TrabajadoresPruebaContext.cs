@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Proyecto.Models;
+using Proyecto.Models.ViewModels;
 
 namespace Proyecto.Datos.DataContext;
 
@@ -23,13 +24,13 @@ public partial class TrabajadoresPruebaContext : DbContext
     public virtual DbSet<Provincia> Provincias { get; set; }
 
     public virtual DbSet<Trabajadore> Trabajadores { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost; Database=TrabajadoresPrueba; Integrated Security=true; TrustServerCertificate=True");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Aca configuramops TrabajadorVM como una entidad sin llave (Keyless) para permitir 
+        // el mapeo directo de los resultados del procedimiento almacenado 'sp_ListarTrabajadores'.
+        // Esto evita que EF Core intente rastrearlo como una tabla física de la base de datos.
+        modelBuilder.Entity<TrabajadorVM>().HasNoKey();
+
         modelBuilder.Entity<Departamento>(entity =>
         {
             entity.HasKey(e => e.IdDepartamento).HasName("PK__Departam__787A433D8D801367");
@@ -81,6 +82,9 @@ public partial class TrabajadoresPruebaContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasDefaultValue("trabajador.webp");
+            entity.Property(e => e.Direccion)
+               .HasMaxLength(255)
+               .IsUnicode(false);
             entity.Property(e => e.Nombres)
                 .HasMaxLength(100)
                 .IsUnicode(false);

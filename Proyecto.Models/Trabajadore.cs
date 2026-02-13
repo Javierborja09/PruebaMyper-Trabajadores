@@ -16,6 +16,8 @@ public partial class Trabajadore
 
     public string Sexo { get; set; } = null!;
 
+    public string? Direccion { get; set; }
+
     public int? IdDistrito { get; set; }
 
     public string? FotoRuta { get; set; }

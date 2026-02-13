@@ -49,6 +49,7 @@ CREATE TABLE Trabajadores (
     -- Nombres y apellidos rara vez pasan de 100 caracteres.
     Nombres VARCHAR(100) NOT NULL,
     Apellidos VARCHAR(100) NOT NULL,
+	Direccion VARCHAR(255) NULL,
     -- Usamos CHAR(1) por que almacenaremos 'M' o 'F' ocupa solo 1 byte.
     Sexo CHAR(1) NOT NULL, 
     IdDistrito INT CONSTRAINT FK_Trabajador_Distrito FOREIGN KEY REFERENCES Distritos(IdDistrito),
