@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto.Datos.Repositories.Interfaces
 {
-    public interface ITrabajadoreRepository : IGenericRepository<Trabajadore>
+    public interface ITrabajadorRepository : IGenericRepository<Trabajadore>
     {
         Task<List<TrabajadorVM>> ListarTrabajadores();
         Task<List<TrabajadorVM>> ListarTrabajadoresPorSexo(char? sexo);

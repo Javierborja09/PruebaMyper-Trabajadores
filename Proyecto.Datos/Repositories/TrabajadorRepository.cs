@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto.Datos.Repositories
 {
-    public class TrabajadorRepository : ITrabajadoreRepository
+    public class TrabajadorRepository : ITrabajadorRepository
     {
         private readonly TrabajadoresPruebaContext _dbcontext;
         public TrabajadorRepository(TrabajadoresPruebaContext context)
