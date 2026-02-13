@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Proyecto.Datos.DataContext;
-
+namespace Proyecto.Models;
 public partial class Trabajadore
 {
     public int IdTrabajador { get; set; }
