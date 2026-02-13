@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto.Datos.Repositories
 {
-    public class TrabajadorRepository : IGenericRepository<Trabajadore>
+    public class TrabajadorRepository : ITrabajadoreRepository
     {
         private readonly TrabajadoresPruebaContext _dbcontext;
         public TrabajadorRepository(TrabajadoresPruebaContext context)
@@ -71,7 +71,7 @@ namespace Proyecto.Datos.Repositories
 
 
         // Metodos para consumir procedimientos para tener la logica mas ordenada ya que desde aca se tendria que realizar ya que tiene acesso directo al _dbcontext
-        public async Task<List<TrabajadorVM>> ListarTrabajadoresAsync()
+        public async Task<List<TrabajadorVM>> ListarTrabajadores()
         {
 
             // Esto nos retornara todos los trabajadores ya que no le pasamos el parametro sexo por ende lo mandaria null
@@ -79,7 +79,7 @@ namespace Proyecto.Datos.Repositories
                 .FromSqlRaw("EXEC sp_ListarTrabajadores")
                 .ToListAsync();
         }
-        public async Task<List<TrabajadorVM>> ListarTrabajadoresPorSexoAsync(char? sexo)
+        public async Task<List<TrabajadorVM>> ListarTrabajadoresPorSexo(char? sexo)
         {
             // Esto nos retornara todos los trabajadores pero con el filtro de sexo en este caso si se le manda F o M se le retornara dependiendo
             return await _dbcontext.Set<TrabajadorVM>()
