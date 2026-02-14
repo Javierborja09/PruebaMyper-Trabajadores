@@ -24,5 +24,11 @@ public partial class Trabajadore
 
     public DateTime? FechaCreacion { get; set; }
 
+    // Nota: Solo incluimos IdDistrito por un tema de orden y respeto a la normalización. 
+    // No pusimos campos de Provincia o Departamento porque, técnicamente, ya están 
+    // conectados a traves del Distrito. 
+    // Si los pusiéramos aqui, tendríamos información duplicada en todos lados y seriaa 
+    // un dolor de cabeza mantener todo sincronizado. Es mejor dejar que el Distrito 
+    // sea la puerta de enlace para traer el resto cuando realmente lo necesitemos.
     public virtual Distrito? IdDistritoNavigation { get; set; }
 }

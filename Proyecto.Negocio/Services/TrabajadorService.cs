@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto.Negocio.Services
 {
-    public class TrabajadorService : ITrabajadoreService
+    public class TrabajadorService : ITrabajadorService
     {
         private readonly ITrabajadorRepository _repository;
 

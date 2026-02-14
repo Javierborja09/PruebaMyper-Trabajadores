@@ -31,6 +31,9 @@ public partial class TrabajadoresPruebaContext : DbContext
         // Esto evita que EF Core intente rastrearlo como una tabla física de la base de datos.
         modelBuilder.Entity<TrabajadorVM>().HasNoKey();
 
+        // Configuramos DistritoVM como una entidad sin llave (Keyless) igual que TrabajadorVM. 
+        modelBuilder.Entity<DistritoVM>().HasNoKey();
+
         modelBuilder.Entity<Departamento>(entity =>
         {
             entity.HasKey(e => e.IdDepartamento).HasName("PK__Departam__787A433D8D801367");

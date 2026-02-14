@@ -70,7 +70,7 @@ namespace Proyecto.Datos.Repositories
         }
 
 
-        // Metodos para consumir procedimientos para tener la logica mas ordenada ya que desde aca se tendria que realizar ya que tiene acesso directo al _dbcontext
+        // Metodos para consumir procedimientos para tener la logica mas ordenada ya que desde aca se tendria que realizar ya que tiene acceso directo al _dbcontext
         public async Task<List<TrabajadorVM>> ListarTrabajadores()
         {
 

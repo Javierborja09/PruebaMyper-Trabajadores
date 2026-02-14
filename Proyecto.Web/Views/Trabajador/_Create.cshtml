@@ -1,0 +1,105 @@
+﻿@model Proyecto.Models.Trabajadore
+
+<div class="modal fade" id="modalTrabajador" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white py-3">
+                <h5 class="modal-title" id="modalLabel">
+                    <i class="bi bi-person-plus-fill me-2"></i>Nuevo Trabajador
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="formTrabajador" asp-action="Crear" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        @* NOMBRES *@
+                        <div class="col-md-6">
+                            <label asp-for="Nombres" class="form-label fw-bold small text-secondary">NOMBRES</label>
+                            <input asp-for="Nombres" class="form-control" placeholder="Ej: Juan" required />
+                            <span asp-validation-for="Nombres" class="text-danger small"></span>
+                        </div>
+
+                        @* APELLIDOS *@
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-secondary">APELLIDOS</label>
+                            <input name="Apellidos" class="form-control" placeholder="Ej: Perez" required />
+                            @* Si tu modelo tiene Apellidos, usa: <span asp-validation-for="Apellidos" class="text-danger small"></span> *@
+                        </div>
+
+                        @* TIPO DE DOCUMENTO *@
+                        <div class="col-md-4">
+                            <label asp-for="TipoDocumento" class="form-label fw-bold small text-secondary">TIPO DOC.</label>
+                            <select asp-for="TipoDocumento" class="form-select" asp-items="ViewBag.TiposDocumento" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                            <span asp-validation-for="TipoDocumento" class="text-danger small"></span>
+                        </div>
+
+                        @* NÚMERO DE DOCUMENTO *@
+                        <div class="col-md-4">
+                            <label asp-for="NumeroDocumento" class="form-label fw-bold small text-secondary">NÚMERO DOC.</label>
+                            <input asp-for="NumeroDocumento" class="form-control" required maxlength="20" />
+                            <span asp-validation-for="NumeroDocumento" class="text-danger small"></span>
+                        </div>
+
+                        @* SEXO *@
+                        <div class="col-md-4">
+                            <label asp-for="Sexo" class="form-label fw-bold small text-secondary">SEXO</label>
+                            <select asp-for="Sexo" class="form-select" required>
+                                <option value="">-- Seleccione --</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                            <span asp-validation-for="Sexo" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-3 text-muted" />
+
+                        @* DEPARTAMENTO *@
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-secondary">DEPARTAMENTO</label>
+                            <select id="cboDepartamento" name="IdDepartamento" class="form-select" asp-items="ViewBag.Departamentos" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+
+                        @* PROVINCIA *@
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-secondary">PROVINCIA</label>
+                            <select id="cboProvincia" name="IdProvincia" class="form-select" disabled required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+
+                        @* DISTRITO *@
+                        <div class="col-md-4">
+                            <label asp-for="IdDistrito" class="form-label fw-bold small text-secondary">DISTRITO</label>
+                            <select asp-for="IdDistrito" id="cboDistrito" class="form-select" disabled required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                            <span asp-validation-for="IdDistrito" class="text-danger small"></span>
+                        </div>
+
+                        @* FOTO *@
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold small text-secondary">FOTO DEL TRABAJADOR</label>
+                            <input type="file" name="fotoFile" class="form-control" accept="image/*" />
+                        </div>
+
+                        @* DIRECCIÓN *@
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold small text-secondary">DIRECCIÓN</label>
+                            <textarea name="Direccion" class="form-control" rows="2" required placeholder="Ej: Av. Las Palmeras 123"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success px-4">Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

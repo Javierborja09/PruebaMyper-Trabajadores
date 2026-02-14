@@ -55,10 +55,9 @@ CREATE TABLE Trabajadores (
     IdDistrito INT CONSTRAINT FK_Trabajador_Distrito FOREIGN KEY REFERENCES Distritos(IdDistrito),
     FotoRuta VARCHAR(255) DEFAULT 'trabajador.webp',
     FechaCreacion DATETIME DEFAULT GETDATE(),
-    -- Índice único para que no se repitan documentos, esto ayuda a la velocidad de búsqueda
-    CONSTRAINT UQ_Documento UNIQUE (TipoDocumento, NumeroDocumento)
 );
 GO
+
 
 
 --- Ahora empezaremos a insertar datos en las tablas correspondientes para obtener estos datos he usado el repositorio https://github.com/ernestorivero/Ubigeo-Peru/blob/master/sql/ubigeo_peru_inei_2016.sql
@@ -2164,7 +2163,27 @@ INSERT INTO Distritos (IdDistrito, Nombre, IdProvincia) VALUES
 SET IDENTITY_INSERT Distritos OFF;
 GO
 
+-- Aca creamos un procedimiento para obtener la ubicación completa (Distrito, Provincia y Departamento) es mejor manejar asi
+-- ya que es unan mala practica poner id departamento provincia y distrito en uan tabla como la de trabajadores directamente
+CREATE PROCEDURE sp_ObtenerDetalleDistrito
+    @IdDistrito INT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT 
+        D.IdDistrito,
+        D.Nombre AS NombreDistrito,
+        P.IdProvincia,
+        P.Nombre AS NombreProvincia,
+        Dep.IdDepartamento,
+        Dep.Nombre AS NombreDepartamento
+    FROM Distritos D
+    INNER JOIN Provincias P ON D.IdProvincia = P.IdProvincia
+    INNER JOIN Departamentos Dep ON P.IdDepartamento = Dep.IdDepartamento
+    WHERE D.IdDistrito = @IdDistrito;
+END
+GO
 
 -- Descripción: Lista trabajadores con opcion de filtrar por sexo.
 -- Si @Sexo es NULL, devuelve todos los registros.
@@ -2172,7 +2191,7 @@ CREATE PROCEDURE sp_ListarTrabajadores
     @Sexo CHAR(1) = NULL 
 AS
 BEGIN
-    SET NOCOUNT ON; -- Optimización para no devolver el conteo de filas afectadas
+    SET NOCOUNT ON;
 
     SELECT 
         T.IdTrabajador,
@@ -2180,12 +2199,13 @@ BEGIN
         T.NumeroDocumento,
         T.Nombres,
         T.Apellidos,
+        T.Direccion,
         T.Sexo,
         T.FotoRuta,
         T.FechaCreacion,
-        D.Nombre AS Distrito,
-        P.Nombre AS Provincia,
-        Dep.Nombre AS Departamento
+        D.Nombre AS NombreDistrito,   
+        P.Nombre AS NombreProvincia,   
+        Dep.Nombre AS NombreDepartamento 
     FROM Trabajadores T
     INNER JOIN Distritos D ON T.IdDistrito = D.IdDistrito
     INNER JOIN Provincias P ON D.IdProvincia = P.IdProvincia

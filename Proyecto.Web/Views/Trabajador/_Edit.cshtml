@@ -1,0 +1,109 @@
+﻿@model Proyecto.Models.Trabajadore
+
+<div class="modal fade" id="modalTrabajador" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-warning text-dark py-3">
+                <h5 class="modal-title" id="modalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Trabajador
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="formTrabajador" asp-action="Editar" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                @* Campo oculto para el ID, vital para que Entity Framework sepa que registro actualizar *@
+                <input type="hidden" asp-for="IdTrabajador" />
+                @* También ocultamos la ruta de la foto actual por si no se sube una nueva *@
+                <input type="hidden" asp-for="FotoRuta" />
+                @* También ocultamos la FechaCreacion para que no se restablesca *@
+                <input type="hidden" asp-for="FechaCreacion" />
+
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        @* NOMBRES *@
+                        <div class="col-md-6">
+                            <label asp-for="Nombres" class="form-label fw-bold small text-secondary">NOMBRES</label>
+                            <input asp-for="Nombres" class="form-control" required />
+                            <span asp-validation-for="Nombres" class="text-danger small"></span>
+                        </div>
+
+                        @* APELLIDOS *@
+                        <div class="col-md-6">
+                            <label asp-for="Apellidos" class="form-label fw-bold small text-secondary">APELLIDOS</label>
+                            <input asp-for="Apellidos" class="form-control" required />
+                            <span asp-validation-for="Apellidos" class="text-danger small"></span>
+                        </div>
+
+                        @* DOCUMENTO *@
+                        <div class="col-md-4">
+                            <label asp-for="TipoDocumento" class="form-label fw-bold small text-secondary">TIPO DOC.</label>
+                            <select asp-for="TipoDocumento" class="form-select" asp-items="ViewBag.TiposDocumento" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="NumeroDocumento" class="form-label fw-bold small text-secondary">NÚMERO DOC.</label>
+                            <input asp-for="NumeroDocumento" class="form-control" required maxlength="20" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Sexo" class="form-label fw-bold small text-secondary">SEXO</label>
+                            <select asp-for="Sexo" class="form-select" required>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
+
+                        <hr class="my-3 text-muted" />
+
+                        @* UBIGEO (DEPARTAMENTO - PROVINCIA - DISTRITO) *@
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-secondary">DEPARTAMENTO</label>
+                            @* Usamos ViewBag.IdDepartamento que ya trae la lista y el seleccionado *@
+                            <select id="cboDepartamento" name="IdDepartamento" class="form-select" asp-items="ViewBag.IdDepartamento" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-secondary">PROVINCIA</label>
+                            @* Agregamos asp-items="ViewBag.IdProvincia" para que cargue las opciones al abrir *@
+                            <select id="cboProvincia" name="IdProvincia" class="form-select" asp-items="ViewBag.IdProvincia" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="IdDistrito" class="form-label fw-bold small text-secondary">DISTRITO</label>
+                            @* Agregamos asp-items="ViewBag.IdDistrito" para que cargue las opciones al abrir *@
+                            <select asp-for="IdDistrito" id="cboDistrito" class="form-select" asp-items="ViewBag.IdDistrito" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+
+                        @* FOTO ACTUAL Y NUEVA *@
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold small text-secondary">FOTO ACTUAL</label>
+                            <div class="mb-2">
+                                <img src="~/uploads/@(Model.FotoRuta ?? "trabajador.webp")" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" />
+                            </div>
+                            <label class="form-label fw-bold small text-secondary">CAMBIAR FOTO (OPCIONAL)</label>
+                            <input type="file" name="fotoFile" class="form-control" accept="image/*" />
+                        </div>
+
+                        @* DIRECCIÓN *@
+                        <div class="col-md-12">
+                            <label asp-for="Direccion" class="form-label fw-bold small text-secondary">DIRECCIÓN</label>
+                            <textarea asp-for="Direccion" class="form-control" rows="2" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Actualizar Datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

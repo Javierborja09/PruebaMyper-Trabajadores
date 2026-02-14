@@ -1,4 +1,5 @@
 ﻿using Proyecto.Models;
+using Proyecto.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,8 @@ namespace Proyecto.Negocio.Services.Interfaces
         Task<bool> Eliminar(int id);
         Task<Distrito> ObtenerPorId(int id);
         Task<IQueryable<Distrito>> obtenerTodo();
+
+
+        Task<DistritoVM> ObtenerDetalleCompleto(int id);
     }
 }

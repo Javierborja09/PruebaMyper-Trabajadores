@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto.Negocio.Services.Interfaces
 {
-    public interface ITrabajadoreService
+    public interface ITrabajadorService
     {
         Task<bool> Insertar(Trabajadore modelo);
         Task<bool> Actualizar(Trabajadore modelo);

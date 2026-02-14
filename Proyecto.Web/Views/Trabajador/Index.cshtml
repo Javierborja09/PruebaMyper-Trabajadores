@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Proyecto.Models.ViewModels.TrabajadorVM>
+@* Generamos el Token de seguridad de forma manual para que esté disponible en el DOM. 
+   Esto permite que nuestras funciones Fetch (AJAX) en index.js puedan capturarlo 
+   y enviarlo al controlador para validar la autenticidad de las peticiones de eliminacion p tambien otras
+   peticiones que quisieramos hacer a futuro. *@
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Gestión de Trabajadores";
+    string sexoFiltro = ViewBag.SexoSeleccionado as string;
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        @* Cabecera *@
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">
+                <i class="bi bi-people-fill me-2"></i>Mantenimiento de Personal
+            </h5>
+            <button type="button" class="btn btn-success btn-sm shadow-sm px-3" onclick="abrirModalRegistro()">
+                <i class="bi bi-person-plus-fill"></i> Registrar Nuevo
+            </button>
+        </div>
+
+        <div class="card-body bg-light">
+            @* Seccion de Filtros *@
+            <form asp-action="Index" method="get" class="row g-3 mb-4 align-items-end p-3 bg-white rounded shadow-sm border mx-0">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-secondary small">FILTRAR POR GENERO</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-filter-circle"></i></span>
+                        <select name="sexo" class="form-select" onchange="this.form.submit()">
+                            <option value="">Todos los géneros</option>
+                            <option value="M" selected="@(sexoFiltro == "M")">Masculino</option>
+                            <option value="F" selected="@(sexoFiltro == "F")">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-counterclockwise"></i> Resetear
+                    </a>
+                </div>
+            </form>
+
+            @* Tabla de Resultados *@
+            <div class="table-responsive rounded shadow-sm bg-white">
+                <table class="table align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr class="small text-uppercase">
+                            <th class="ps-3" style="width: 80px;">Foto</th>
+                            <th>Información Personal</th>
+                            <th>Ubicación</th>
+                            <th>Documento</th>
+                            <th>Género</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string rowStyle = item.Sexo == "M"
+                            ? "background-color: #e3f2fd;"
+                            : "background-color: #fce4ec;";
+
+                            <tr style="@rowStyle" class="border-bottom">
+                                <td class="ps-3 text-center">
+                                    <img src="~/uploads/@(string.IsNullOrEmpty(item.FotoRuta) ? "trabajador.webp" : item.FotoRuta)"
+                                         class="rounded-circle shadow-sm border border-2 border-white"
+                                         style="width: 50px; height: 50px; object-fit: cover;"
+                                         alt="Foto" />
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.NombreCompleto</div>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-clock-history me-1"></i>Reg: @item.FechaCreacion?.ToString("dd/MM/yyyy")
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <i class="bi bi-geo-alt-fill text-danger"></i>
+                                        <strong>@item.NombreDepartamento</strong> / @item.NombreProvincia / @item.NombreDistrito
+                                    </div>
+                                    <div class="text-muted x-small text-truncate" style="max-width: 200px;">
+                                        @item.Direccion
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">@item.TipoDocumento</span>
+                                    <div class="fw-bold mt-1 small">@item.NumeroDocumento</div>
+                                </td>
+                                <td>
+                                    @if (item.Sexo == "M")
+                                    {
+                                        <span class="badge shadow-sm w-100 py-2" style="background-color: #1976D2; color: white;">
+                                            <i class="bi bi-gender-male"></i> MASCULINO
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge shadow-sm w-100 py-2" style="background-color: #D81B60; color: white;">
+                                            <i class="bi bi-gender-female"></i> FEMENINO
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group shadow-sm border rounded bg-white">
+                                        <button type="button" class="btn btn-sm btn-light border-end" title="Editar" onclick="abrirModalEdicion(@item.IdTrabajador)">
+                                            <i class="bi bi-pencil-square text-warning" style="font-size: 1.1rem;"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-light" title="Eliminar" onclick="confirmarEliminacionTrabajador(@item.IdTrabajador)">
+                                            <i class="bi bi-trash3-fill text-danger" style="font-size: 1.1rem;"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script src="~/js/trabajador/index.js" asp-append-version="true"></script>
+    <script src="~/js/trabajador/ubigeo.js" asp-append-version="true"></script>
+}

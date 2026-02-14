@@ -1,5 +1,7 @@
-﻿using Proyecto.Datos.Repositories.Interfaces;
+﻿using Proyecto.Datos.Repositories;
+using Proyecto.Datos.Repositories.Interfaces;
 using Proyecto.Models;
+using Proyecto.Models.ViewModels;
 using Proyecto.Negocio.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,9 @@ namespace Proyecto.Negocio.Services
 {
     public class DistritoService : IDistritoService
     {
-        private readonly IGenericRepository<Distrito> _repository;
+        private readonly IDistritoRepository _repository;
 
-        public DistritoService(IGenericRepository<Distrito> repository)
+        public DistritoService(IDistritoRepository repository)
         {
             _repository = repository;
         }
@@ -27,5 +29,8 @@ namespace Proyecto.Negocio.Services
         public async Task<Distrito> ObtenerPorId(int id) => await _repository.ObtenerPorId(id);
 
         public async Task<IQueryable<Distrito>> obtenerTodo() => await _repository.obtenerTodo();
+
+
+        public async Task<DistritoVM> ObtenerDetalleCompleto(int id) => await _repository.ObtenerDetalleCompleto(id);
     }
 }

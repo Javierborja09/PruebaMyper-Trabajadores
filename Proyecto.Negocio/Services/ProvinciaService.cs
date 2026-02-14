@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Proyecto.Datos.Repositories.Interfaces;
+using Proyecto.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
