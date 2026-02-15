@@ -86,6 +86,17 @@ namespace Proyecto.Datos.Repositories
                 .FromSqlRaw("EXEC sp_ListarTrabajadores @Sexo = {0}", sexo)
                 .ToListAsync();
         }
+
+        // metodo para validaciones  y no duplicar trabajadores con la misma id
+        public async Task<Trabajadore?> ObtenerPorDocumento(string tipoDocumento, string numeroDocumento)
+        {
+            return await _dbcontext.Trabajadores
+                .FirstOrDefaultAsync(t => t.TipoDocumento == tipoDocumento
+                                       && t.NumeroDocumento == numeroDocumento);
+        }
+
     }
+
+
 }
 

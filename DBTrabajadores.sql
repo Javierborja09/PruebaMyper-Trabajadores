@@ -58,6 +58,11 @@ CREATE TABLE Trabajadores (
 );
 GO
 
+-- estos campos deben ser unicos debe ser unico
+ALTER TABLE Trabajadores
+ADD CONSTRAINT UQ_TipoDocumento_NumeroDocumento 
+UNIQUE (TipoDocumento, NumeroDocumento);
+
 
 
 --- Ahora empezaremos a insertar datos en las tablas correspondientes para obtener estos datos he usado el repositorio https://github.com/ernestorivero/Ubigeo-Peru/blob/master/sql/ubigeo_peru_inei_2016.sql

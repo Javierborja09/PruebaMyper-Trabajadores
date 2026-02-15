@@ -74,26 +74,46 @@ namespace Proyecto.Web.Controllers
             return PartialView("_Create", new Trabajadore());
         }
 
-        // En este caso  al metodo le podremos tipo  [HttpPost] ya que recibiremos datos del usuario
+        // En este caso  al metodo le podremos tipo  [HttpPost] ya que recibiremos datos del formulario
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Crear(Trabajadore modelo, IFormFile fotoFile)
+        public async Task<IActionResult> Crear(Trabajadore modelo, IFormFile? fotoFile)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Mensaje"] = "Error: Faltan datos obligatorios o el formato es incorrecto.";
+                TempData["TipoMensaje"] = "danger";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Validamos que no exista un trabajador con el mismo tipo y número de documento
+            if (await _trabajadorService.ExisteDocumento(modelo.TipoDocumento, modelo.NumeroDocumento))
+            {
+
+                // enviamos el error por TempData y regresamos al Index
+                TempData["Mensaje"] = $"Error: Ya existe un trabajador con {modelo.TipoDocumento}: {modelo.NumeroDocumento}";
+                TempData["TipoMensaje"] = "danger";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             //Verificamos en caso foto sea diferente a null o sea mayor a 0 significa que el usuario si inserto una foto y la almacenamos en le carpeta uploads
             if (fotoFile != null && fotoFile.Length > 0)
             {
                 string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(fotoFile.FileName);
                 string rutaCarga = Path.Combine(_env.WebRootPath, "uploads", nombreArchivo);
-
                 using (var stream = new FileStream(rutaCarga, FileMode.Create))
                 {
                     await fotoFile.CopyToAsync(stream);
                 }
                 modelo.FotoRuta = nombreArchivo;
             }
-
             //Seguidamente llamamos al Insertar que tenemos en nuestro service para registrar al trabajador
             await _trabajadorService.Insertar(modelo);
+
+            // Establecemos mensaje de éxito en TempData para mostrarlo en el Index
+            TempData["Mensaje"] = "Trabajador registrado exitosamente";
+            TempData["TipoMensaje"] = "success";
 
             // y redirigimos a la vista Principal
             return RedirectToAction(nameof(Index));
@@ -133,22 +153,39 @@ namespace Proyecto.Web.Controllers
             return PartialView("_Edit", modelo);
         }
 
-        // En este caso  al metodo le podremos tipo  [HttpPost] ya que recibiremos datos del usuario
+        // En este caso  al metodo le podremos tipo  [HttpPost] ya que recibiremos datos del formulario
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Trabajadore modelo, IFormFile fotoFile)
+        public async Task<IActionResult> Editar(Trabajadore modelo, IFormFile? fotoFile)
         {
-
-            // verificamos si el trabajador existe obteniendolo del metodo del service en caso no exista retornamos un error 
+            ModelState.Remove("FotoRuta");
+            if (!ModelState.IsValid)
+            {
+                TempData["Mensaje"] = "Error: Faltan datos obligatorios o el formato es incorrecto.";
+                TempData["TipoMensaje"] = "danger";
+                return RedirectToAction(nameof(Index));
+            }
+            // Verificamos si el trabajador existe
             var trabajadorExistente = await _trabajadorService.ObtenerPorId(modelo.IdTrabajador);
             if (trabajadorExistente == null) return NotFound();
 
+            // Validamos que no exista un trabajador con el mismo tipo y número de documento
+            if (await _trabajadorService.ExisteDocumento(modelo.TipoDocumento, modelo.NumeroDocumento)
+                && (trabajadorExistente.NumeroDocumento != modelo.NumeroDocumento || trabajadorExistente.TipoDocumento != modelo.TipoDocumento))
+            {
+                // Solo notificamos el error con TempData y redirigimos
+                TempData["Mensaje"] = $"Ya existe otro trabajador con {modelo.TipoDocumento}: {modelo.NumeroDocumento}";
+                TempData["TipoMensaje"] = "error";
 
-            //aca hacemos lo mismo que el crear pero con algo adicional ya que llamamos al metodo que creamos EliminarArchivoFoto para que se elimine la foto antigua
-            // y se ponga la foto nueva para evitar consumir almacenamiento
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Logica de la Foto
             if (fotoFile != null && fotoFile.Length > 0)
             {
+                // Eliminamos la foto anterior físicamente para no llenar el servidor
                 EliminarArchivoFoto(trabajadorExistente.FotoRuta);
+
                 string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(fotoFile.FileName);
                 string rutaCarga = Path.Combine(_env.WebRootPath, "uploads", nombreArchivo);
 
@@ -156,14 +193,21 @@ namespace Proyecto.Web.Controllers
                 {
                     await fotoFile.CopyToAsync(stream);
                 }
-                // y restablecemos la ruta del archivo 
                 modelo.FotoRuta = nombreArchivo;
             }
+            else
+            {
+                // Si no subió foto nueva, mantenemos la ruta de la foto que ya tenía
+                modelo.FotoRuta = trabajadorExistente.FotoRuta;
+            }
 
-            //Seguidamente llamamos al Actualizar que tenemos en nuestro service para actualizar al trabajador
+            // Actualizamos y notificamos
             await _trabajadorService.Actualizar(modelo);
 
-            // redirigimos ala vista principal
+            TempData["Mensaje"] = "Trabajador actualizado correctamente";
+            TempData["TipoMensaje"] = "success";
+
+            // y redirigimos a la vista Principal
             return RedirectToAction(nameof(Index));
         }
 
@@ -239,6 +283,8 @@ namespace Proyecto.Web.Controllers
                 }
             }
         }
+
+
     }
 
 

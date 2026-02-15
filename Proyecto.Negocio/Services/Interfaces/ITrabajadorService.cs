@@ -15,6 +15,10 @@ namespace Proyecto.Negocio.Services.Interfaces
         Task<bool> Eliminar(int id);
         Task<Trabajadore> ObtenerPorId(int id);
 
+        // Método para validar documento duplicado
+        Task<bool> ExisteDocumento(string tipoDocumento, string numeroDocumento);
+
+
         // Métodos especializados para la vista
         // Estos llamarán a los procedimientos almacenados que creamos en el repositorio
         Task<List<TrabajadorVM>> ListarTodos();

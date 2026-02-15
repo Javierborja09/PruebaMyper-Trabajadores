@@ -482,3 +482,10 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# Ignorar todo el contenido de la carpeta uploads
+wwwroot/uploads/*
+
+# Excepto el archivo base por defecto
+!wwwroot/uploads/trabajador.webp

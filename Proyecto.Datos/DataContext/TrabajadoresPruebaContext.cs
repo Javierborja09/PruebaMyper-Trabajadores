@@ -73,7 +73,10 @@ public partial class TrabajadoresPruebaContext : DbContext
         {
             entity.HasKey(e => e.IdTrabajador).HasName("PK__Trabajad__6FAFBCF0AA4A9BC9");
 
-            entity.HasIndex(e => new { e.TipoDocumento, e.NumeroDocumento }, "UQ_Documento").IsUnique();
+            entity.HasIndex(e => new { e.TipoDocumento, e.NumeroDocumento })
+       .IsUnique()
+       .HasDatabaseName("UQ_TipoDocumento_NumeroDocumento");
+
 
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(100)

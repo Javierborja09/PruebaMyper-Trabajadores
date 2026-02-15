@@ -12,5 +12,8 @@ namespace Proyecto.Datos.Repositories.Interfaces
     {
         Task<List<TrabajadorVM>> ListarTrabajadores();
         Task<List<TrabajadorVM>> ListarTrabajadoresPorSexo(char? sexo);
+
+        // para validaciones
+        Task<Trabajadore?> ObtenerPorDocumento(string tipoDocumento, string numeroDocumento);
     }
 }

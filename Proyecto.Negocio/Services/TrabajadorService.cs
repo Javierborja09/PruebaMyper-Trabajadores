@@ -28,5 +28,16 @@ namespace Proyecto.Negocio.Services
         public async Task<List<TrabajadorVM>> ListarTodos() => await _repository.ListarTrabajadores();
 
         public async Task<List<TrabajadorVM>> ListarPorSexo(char? sexo) => await _repository.ListarTrabajadoresPorSexo(sexo);
+
+
+         public async Task<bool> ExisteDocumento(string tipoDocumento, string numeroDocumento)
+        {
+            var trabajadorExistente = await _repository.ObtenerPorDocumento(tipoDocumento, numeroDocumento);
+            
+            // Si no existe ningún trabajador con ese documento, retorna false
+            if (trabajadorExistente == null)
+                return false;
+            return true;
+        }
     }
 }

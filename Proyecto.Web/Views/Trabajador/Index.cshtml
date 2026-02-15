@@ -10,6 +10,32 @@
 }
 
 <div class="container mt-4">
+
+    @* Seccion para mostrar los mensajes que mandamos en tempdata *@
+    @if (TempData["Mensaje"] != null)
+    {
+        var tipoMensaje = TempData["TipoMensaje"]?.ToString() ?? "info";
+        var iconoClase = tipoMensaje == "success" ? "bi-check-circle-fill" : "bi-exclamation-triangle-fill";
+        var colorClase = tipoMensaje == "success" ? "alert-success" : "alert-danger";
+
+        <div id="alertaMensaje" class="alert @colorClase alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi @iconoClase me-2"></i>
+            <strong>@TempData["Mensaje"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <script>
+            // Auto cerrar después de 5 segundos
+            setTimeout(function() {
+                var alerta = document.getElementById('alertaMensaje');
+                if (alerta) {
+                    var bsAlert = new bootstrap.Alert(alerta);
+                    bsAlert.close();
+                }
+            }, 5000);
+        </script>
+    }
+
     <div class="card shadow-sm border-0">
         @* Cabecera *@
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">

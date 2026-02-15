@@ -18,14 +18,12 @@
                         <div class="col-md-6">
                             <label asp-for="Nombres" class="form-label fw-bold small text-secondary">NOMBRES</label>
                             <input asp-for="Nombres" class="form-control" placeholder="Ej: Juan" required />
-                            <span asp-validation-for="Nombres" class="text-danger small"></span>
                         </div>
 
                         @* APELLIDOS *@
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-secondary">APELLIDOS</label>
                             <input name="Apellidos" class="form-control" placeholder="Ej: Perez" required />
-                            @* Si tu modelo tiene Apellidos, usa: <span asp-validation-for="Apellidos" class="text-danger small"></span> *@
                         </div>
 
                         @* TIPO DE DOCUMENTO *@
@@ -34,14 +32,12 @@
                             <select asp-for="TipoDocumento" class="form-select" asp-items="ViewBag.TiposDocumento" required>
                                 <option value="">-- Seleccione --</option>
                             </select>
-                            <span asp-validation-for="TipoDocumento" class="text-danger small"></span>
                         </div>
 
                         @* NÚMERO DE DOCUMENTO *@
                         <div class="col-md-4">
                             <label asp-for="NumeroDocumento" class="form-label fw-bold small text-secondary">NÚMERO DOC.</label>
                             <input asp-for="NumeroDocumento" class="form-control" required maxlength="20" />
-                            <span asp-validation-for="NumeroDocumento" class="text-danger small"></span>
                         </div>
 
                         @* SEXO *@
@@ -52,7 +48,6 @@
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
                             </select>
-                            <span asp-validation-for="Sexo" class="text-danger small"></span>
                         </div>
 
                         <hr class="my-3 text-muted" />
@@ -79,7 +74,6 @@
                             <select asp-for="IdDistrito" id="cboDistrito" class="form-select" disabled required>
                                 <option value="">-- Seleccione --</option>
                             </select>
-                            <span asp-validation-for="IdDistrito" class="text-danger small"></span>
                         </div>
 
                         @* FOTO *@
