@@ -485,7 +485,7 @@ $RECYCLE.BIN/
 
 
 # Ignorar todo el contenido de la carpeta uploads
-wwwroot/uploads/*
+Proyecto.Web/wwwroot/uploads/*
 
 # Excepto el archivo base por defecto
-!wwwroot/uploads/trabajador.webp
+!Proyecto.Web/wwwroot/uploads/trabajador.webp
